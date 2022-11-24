@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const user = require("./route/user");
 
 //
 const app = express();
@@ -19,11 +21,12 @@ mongoose
   .connect(db, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
+
+// routes
+app.use("/user", user);
 
 // serve static assets if in production
 if (process.env.NODE_ENV === "production") {
@@ -35,6 +38,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5555;
 
 app.listen(port, () => console.log(`server started at port ${port}`));
