@@ -1,7 +1,4 @@
 import axios from "axios";
-export enum BASE_URL {
-  baseURL = "http://localhost:5555/user",
-}
 
 export const apiData = async (url: string, data: any, method: string) => {
   if (method === "POST") {
