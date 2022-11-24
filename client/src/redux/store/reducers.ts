@@ -23,7 +23,11 @@ const userReducer = (
         ...state.slice(indexToUpdate + 1),
       ];
     case UserActionType.GET_USER:
-      return action.payload;
+      let users = action.payload.map((user: any) => ({
+        ...user,
+        key: user._id,
+      }));
+      return users;
     default:
       return state;
   }
