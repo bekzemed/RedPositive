@@ -15,12 +15,16 @@ import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import image from "./assets/redpositive.jpeg";
 
-import { PlusCircleOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  SendOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import UserForm from "./userForm";
-import UserUpdateForm from "./userUpdateForm";
 import { State } from "./redux/root-reducer";
 import { getUserRequest, removeUserRequest } from "./redux/store/actions";
+import UserForm from "./userForm";
+import UserUpdateForm from "./userUpdateForm";
 
 interface DataType {
   _id: string;
@@ -43,21 +47,12 @@ const MAIN_MENU_ITEMS = [
   },
 ];
 
-const rowSelection = {
-  onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
-
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [user, setUser] = useState("");
   const users = useSelector((state: State) => state.users);
+  const [rowData, setRowData] = useState<DataType[]>([]);
 
   useEffect(() => {
     dispatch(getUserRequest());
@@ -65,6 +60,12 @@ const App: React.FC = () => {
 
   const deleteUser = (id: string) => {
     dispatch(removeUserRequest(id));
+  };
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      setRowData(selectedRows);
+    },
   };
 
   const columns: ColumnsType<DataType> = [
@@ -147,6 +148,13 @@ const App: React.FC = () => {
               icon={<PlusCircleOutlined />}
             >
               Register new User
+            </Button>,
+            <Button
+              disabled={rowData.length === 0}
+              type="primary"
+              icon={<SendOutlined />}
+            >
+              Send Selected Rows
             </Button>,
           ]}
         />
